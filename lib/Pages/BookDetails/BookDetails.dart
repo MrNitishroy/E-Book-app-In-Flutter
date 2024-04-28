@@ -25,7 +25,7 @@ class BookDetails extends StatelessWidget {
                       title: book.title!,
                       author: book.author!,
                       description: book.description!,
-                      rating: book.rating!,
+                      rating: book.rating ?? "0",
                       pages: book.pages.toString(),
                       langugae: book.language.toString(),
                       audioLen: book.audioLen!,

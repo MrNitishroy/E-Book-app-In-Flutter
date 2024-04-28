@@ -1,9 +1,11 @@
 import 'package:e_book/Components/BookCard.dart';
 import 'package:e_book/Components/BookTile.dart';
 import 'package:e_book/Components/MyDrawer.dart';
+import 'package:e_book/Controller/AuthController.dart';
 import 'package:e_book/Controller/BookController.dart';
 import 'package:e_book/Models/Data.dart';
 import 'package:e_book/Pages/BookDetails/BookDetails.dart';
+import 'package:e_book/Pages/CategoryBook/CategoryBook.dart';
 import 'package:e_book/Pages/Homepage/Widgets/AppBar.dart';
 import 'package:e_book/Pages/Homepage/Widgets/CategoryWidget.dart';
 import 'package:e_book/Pages/Homepage/Widgets/MyInputeTextField.dart';
@@ -17,6 +19,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BookController bookController = Get.put(BookController());
+    AuthController authController = Get.put(AuthController());
     bookController.getUserBook();
     return Scaffold(
       drawer: myDrawer,
@@ -39,7 +42,7 @@ class HomePage extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                "Good Morining✌️",
+                                "Good ✌️",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge
@@ -50,7 +53,8 @@ class HomePage extends StatelessWidget {
                                     ),
                               ),
                               Text(
-                                "Nitish",
+                                authController.auth.currentUser!.displayName! ??
+                                    "User",
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineMedium
@@ -86,7 +90,7 @@ class HomePage extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                "Topics",
+                                "Category",
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelMedium
@@ -105,6 +109,12 @@ class HomePage extends StatelessWidget {
                               children: categoryData
                                   .map(
                                     (e) => CategoryWidget(
+                                        ontap: () {
+                                          Get.to(
+                                            CategoryBook(
+                                                categoryName: e["lebel"]!),
+                                          );
+                                        },
                                         iconPath: e["icon"]!,
                                         btnName: e["lebel"]!),
                                   )
@@ -124,10 +134,15 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Trending",
+                        "Trending Courses",
                         style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                      Text(
+                        "see all",
+                        style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ],
                   ),
@@ -172,7 +187,7 @@ class HomePage extends StatelessWidget {
                                 coverUrl: e.coverUrl!,
                                 author: e.author!,
                                 price: e.price!,
-                                rating: e.rating!,
+                                rating: e.rating ?? "0",
                                 totalRating: 12,
                               ),
                             )

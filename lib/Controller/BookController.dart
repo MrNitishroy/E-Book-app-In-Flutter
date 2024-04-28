@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_book/Config/ConstValue.dart';
 import 'package:e_book/Config/Messages.dart';
 import 'package:e_book/Models/BookModel.dart';
 import 'package:file_picker/file_picker.dart';
@@ -9,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
@@ -25,21 +28,21 @@ class BookController extends GetxController {
   final storage = FirebaseStorage.instance;
   final db = FirebaseFirestore.instance;
   final fAuth = FirebaseAuth.instance;
+  final uuid = Uuid();
   RxString imageUrl = "".obs;
   RxString pdfUrl = "".obs;
+  RxBool isLoading = false.obs;
   int index = 0;
   RxBool isImageUploading = false.obs;
   RxBool isPdfUploading = false.obs;
   RxBool isPostUploading = true.obs;
   var bookData = RxList<BookModel>();
   var currentUserBooks = RxList<BookModel>();
-
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
     getAllBooks();
-   
   }
 
   void getAllBooks() async {
@@ -61,6 +64,23 @@ class BookController extends GetxController {
     for (var book in books.docs) {
       currentUserBooks.add(BookModel.fromJson(book.data()));
     }
+  }
+
+  Stream<List<BookModel>> getBookAsync() {
+    return db.collection("Books").snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => BookModel.fromJson(
+                  doc.data(),
+                ),
+              )
+              .toList(),
+        );
+  }
+
+  Stream<List<BookModel>> getCategoryBook(String categoryName) {
+    return db.collection(categoryName).snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => BookModel.fromJson(doc.data())).toList());
   }
 
   void pickImage() async {
@@ -85,15 +105,45 @@ class BookController extends GetxController {
     isImageUploading.value = false;
   }
 
-  void createBook() async {
+  void createBook(String categoryIndex) async {
     isPostUploading.value = true;
+    var id = uuid.v1();
+    var categoryName = xclass;
+    switch (categoryIndex) {
+      case "10":
+        {
+          categoryName = xclass;
+        }
+        break;
+      case "11":
+        {
+          categoryName = xiclass;
+        }
+        break;
+      case "12":
+        {
+          categoryName = xiiclass;
+        }
+        break;
+      case "13":
+        {
+          categoryName = undergraduation;
+        }
+        break;
+      case "14":
+        {
+          categoryName = postgraduation;
+        }
+        break;
+    }
     var newBook = BookModel(
-      id: "$index",
+      id: id,
       title: title.text,
       description: des.text,
       coverUrl: imageUrl.value,
       bookurl: pdfUrl.value,
       author: auth.text,
+      category: categoryName,
       aboutAuthor: aboutAuth.text,
       price: int.parse(price.text),
       pages: int.parse(pages.text),
@@ -103,9 +153,10 @@ class BookController extends GetxController {
       rating: "",
     );
 
-    await db.collection("Books").add(newBook.toJson());
-    addBookInUserDb(newBook);
-    isPostUploading.value = false;
+    await db.collection("Books").doc(id).set(newBook.toJson());
+    await db.collection(categoryName).doc(id).set(newBook.toJson());
+    addBookInUserDb(newBook, id);
+
     title.clear();
     des.clear();
     aboutAuth.clear();
@@ -119,6 +170,7 @@ class BookController extends GetxController {
     successMessage("Book added to the db");
     getAllBooks();
     getUserBook();
+    isPostUploading.value = false;
   }
 
   void pickPDF() async {
@@ -150,12 +202,58 @@ class BookController extends GetxController {
     isPdfUploading.value = false;
   }
 
-  void addBookInUserDb(BookModel book) async {
+  void addBookInUserDb(BookModel book, String id) async {
     await db
         .collection("userBook")
         .doc(fAuth.currentUser!.uid)
         .collection("Books")
-        .add(book.toJson());
+        .doc(id)
+        .set(book.toJson());
   }
 
+  Future<void> deleteBook(String id, String category) async {
+    await db.collection("Books").doc(id).delete();
+    await db.collection(category).doc(id).delete();
+  }
+
+  Future<void> updateBook(
+    String id,
+    String category,
+    String name,
+    String des,
+    String author,
+    String authorDes,
+    int price,
+    int pages,
+    String lang,
+    String audioLang,
+    String coverurl,
+    String pdfUrl,
+  ) async {
+    isLoading.value = true;
+    try {
+      var newBook = BookModel(
+        id: id,
+        title: name,
+        description: des,
+        audioLen: audioLang,
+        aboutAuthor: authorDes,
+        price: price,
+        pages: pages,
+        language: lang,
+        author: author,
+        coverUrl: coverurl,
+        bookurl: pdfUrl,
+      );
+
+      await db.collection("Books").doc(id).update(newBook.toJson());
+      await db.collection(category).doc(id).update(newBook.toJson());
+      successMessage("Done");
+      getAllBooks();
+      Get.back();
+    } catch (ex) {
+      errorMessage(ex.toString());
+    }
+    isLoading.value = false;
+  }
 }

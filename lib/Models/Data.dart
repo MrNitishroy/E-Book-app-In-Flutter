@@ -1,21 +1,26 @@
+import 'package:e_book/Config/ConstValue.dart';
 import 'package:e_book/Models/BookModel.dart';
 
 var categoryData = [
   {
-    "icon": "Assets/Icons/heart.svg",
-    "lebel": "Romance",
+    "icon": "Assets/Icons/book.svg",
+    "lebel": xclass,
   },
   {
-    "icon": "Assets/Icons/plane.svg",
-    "lebel": "Travel",
+    "icon": "Assets/Icons/book.svg",
+    "lebel": xiclass,
   },
   {
-    "icon": "Assets/Icons/world.svg",
-    "lebel": "Documentary",
+    "icon": "Assets/Icons/book.svg",
+    "lebel": xiiclass,
   },
   {
-    "icon": "Assets/Icons/heart.svg",
-    "lebel": "Love Story",
+    "icon": "Assets/Icons/book.svg",
+    "lebel": undergraduation,
+  },
+  {
+    "icon": "Assets/Icons/book.svg",
+    "lebel": postgraduation,
   },
 ];
 
