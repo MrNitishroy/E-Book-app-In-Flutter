@@ -212,8 +212,10 @@ class BookController extends GetxController {
   }
 
   Future<void> deleteBook(String id, String category) async {
+    print("deleteing Book");
     await db.collection("Books").doc(id).delete();
     await db.collection(category).doc(id).delete();
+    Get.back();
   }
 
   Future<void> updateBook(

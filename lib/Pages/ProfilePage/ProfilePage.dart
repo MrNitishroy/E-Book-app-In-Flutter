@@ -174,18 +174,12 @@ class ProfilePage extends StatelessWidget {
                                         onPressed: () {
                                           Get.defaultDialog(
                                             title: "Delete Book",
-                                            confirm: OutlinedButton.icon(
+                                            confirm: ElevatedButton.icon(
                                                 onPressed: () {
-                                                  ElevatedButton.icon(
-                                                      onPressed: () {
-                                                        bookController
-                                                            .deleteBook(
-                                                          e.id!,
-                                                          e.category!,
-                                                        );
-                                                      },
-                                                      icon: Icon(Icons.delete),
-                                                      label: Text("Delete"));
+                                                  bookController.deleteBook(
+                                                    e.id!,
+                                                    e.category!,
+                                                  );
                                                 },
                                                 icon: Icon(Icons.delete),
                                                 label: Text("Delete")),
@@ -198,7 +192,7 @@ class ProfilePage extends StatelessWidget {
                                             content: Column(
                                               children: [
                                                 Text(
-                                                    "Did you realy want to delete book")
+                                                    "Did you realy want to delete book"),
                                               ],
                                             ),
                                           );
