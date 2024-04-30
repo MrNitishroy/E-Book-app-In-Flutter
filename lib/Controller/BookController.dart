@@ -109,68 +109,79 @@ class BookController extends GetxController {
     isPostUploading.value = true;
     var id = uuid.v1();
     var categoryName = xclass;
-    switch (categoryIndex) {
-      case "10":
-        {
-          categoryName = xclass;
-        }
-        break;
-      case "11":
-        {
-          categoryName = xiclass;
-        }
-        break;
-      case "12":
-        {
-          categoryName = xiiclass;
-        }
-        break;
-      case "13":
-        {
-          categoryName = undergraduation;
-        }
-        break;
-      case "14":
-        {
-          categoryName = postgraduation;
-        }
-        break;
+
+    if (title.text.isNotEmpty &&
+        des.text.isNotEmpty &&
+        imageUrl.value.isNotEmpty &&
+        pdfUrl.value.isNotEmpty &&
+        auth.text.isNotEmpty &&
+        categoryName.isNotEmpty &&
+        price.text.isNotEmpty &&
+        pages.text.isNotEmpty) {
+      switch (categoryIndex) {
+        case "10":
+          {
+            categoryName = xclass;
+          }
+          break;
+        case "11":
+          {
+            categoryName = xiclass;
+          }
+          break;
+        case "12":
+          {
+            categoryName = xiiclass;
+          }
+          break;
+        case "13":
+          {
+            categoryName = undergraduation;
+          }
+          break;
+        case "14":
+          {
+            categoryName = postgraduation;
+          }
+          break;
+      }
+      var newBook = BookModel(
+        id: id,
+        title: title.text,
+        description: des.text,
+        coverUrl: imageUrl.value,
+        bookurl: pdfUrl.value,
+        author: auth.text,
+        category: categoryName,
+        aboutAuthor: aboutAuth.text,
+        price: int.parse(price.text),
+        pages: int.parse(pages.text),
+        language: language.text,
+        audioLen: audioLen.text,
+        audioUrl: "",
+        rating: "",
+      );
+      await db.collection("Books").doc(id).set(newBook.toJson());
+      await db.collection(categoryName).doc(id).set(newBook.toJson());
+      addBookInUserDb(newBook, id);
+      title.clear();
+      des.clear();
+      aboutAuth.clear();
+      pages.clear();
+      language.clear();
+      audioLen.clear();
+      auth.clear();
+      price.clear();
+      imageUrl.value = "";
+      pdfUrl.value = "";
+      successMessage("Book added");
+      Get.back();
+      getAllBooks();
+      getUserBook();
+      isPostUploading.value = false;
+    } else {
+      errorMessage("Please Fill all fields");
     }
-    var newBook = BookModel(
-      id: id,
-      title: title.text,
-      description: des.text,
-      coverUrl: imageUrl.value,
-      bookurl: pdfUrl.value,
-      author: auth.text,
-      category: categoryName,
-      aboutAuthor: aboutAuth.text,
-      price: int.parse(price.text),
-      pages: int.parse(pages.text),
-      language: language.text,
-      audioLen: audioLen.text,
-      audioUrl: "",
-      rating: "",
-    );
-
-    await db.collection("Books").doc(id).set(newBook.toJson());
-    await db.collection(categoryName).doc(id).set(newBook.toJson());
-    addBookInUserDb(newBook, id);
-
-    title.clear();
-    des.clear();
-    aboutAuth.clear();
-    pages.clear();
-    language.clear();
-    audioLen.clear();
-    auth.clear();
-    price.clear();
-    imageUrl.value = "";
-    pdfUrl.value = "";
-    successMessage("Book added to the db");
-    getAllBooks();
-    getUserBook();
-    isPostUploading.value = false;
   }
 
   void pickPDF() async {
