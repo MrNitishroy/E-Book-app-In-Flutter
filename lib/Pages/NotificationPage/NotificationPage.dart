@@ -59,6 +59,15 @@ class NotificationPage extends StatelessWidget {
                         notifications[index].des!,
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
+                      trailing:
+                          adminEmail == authController.auth.currentUser!.email
+                              ? IconButton(
+                                  onPressed: () {
+                                    notificationController.deleteNotification(
+                                        notifications[index].id!);
+                                  },
+                                  icon: Icon(Icons.delete))
+                              : SizedBox(),
                     ),
                   );
                 });

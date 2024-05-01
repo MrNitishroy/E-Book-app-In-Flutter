@@ -31,7 +31,7 @@ class HomeAppBar extends StatelessWidget {
                       authController.auth.currentUser!.photoURL!))),
         ),
         Text(
-          "E-BOOK",
+          "StudySphare",
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: Theme.of(context).colorScheme.background,
               ),

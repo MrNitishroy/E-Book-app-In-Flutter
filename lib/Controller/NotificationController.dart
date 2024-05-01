@@ -45,4 +45,8 @@ class NotificationController extends GetxController {
               .toList(),
         );
   }
+
+  Future<void> deleteNotification(String id) async {
+    await db.collection("notification").doc(id).delete();
+  }
 }

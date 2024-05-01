@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                "Good ✌️",
+                                "Hello ✌️",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge
