@@ -30,6 +30,8 @@ class AuthController extends GetxController {
     isLoading.value = false;
   }
 
+  
+
   void signout() async {
     await auth.signOut();
     successMessage('Logout');

@@ -30,102 +30,100 @@ class HomePage extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
               color: Theme.of(context).colorScheme.primary,
               // height: 500,
-              child: Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          SizedBox(height: 30),
-                          HomeAppBar(),
-                          SizedBox(height: 50),
-                          Row(
-                            children: [
-                              Text(
-                                "Hello ✌️",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,
-                                    ),
-                              ),
-                              Text(
-                                authController.auth.currentUser!.displayName! ??
-                                    "User",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  "Time to read book and enhance your knowledge",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall
-                                      ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          MyInputTextField(),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Text(
-                                "Category",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: categoryData
-                                  .map(
-                                    (e) => CategoryWidget(
-                                        ontap: () {
-                                          Get.to(
-                                            CategoryBook(
-                                                categoryName: e["lebel"]!),
-                                          );
-                                        },
-                                        iconPath: e["icon"]!,
-                                        btnName: e["lebel"]!),
-                                  )
-                                  .toList(),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 30),
+                        HomeAppBar(),
+                        SizedBox(height: 50),
+                        Row(
+                          children: [
+                            Text(
+                              "Hello ✌️",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                  ),
                             ),
-                          )
-                        ],
-                      ),
+                            Text(
+                              authController.auth.currentUser!.displayName! ??
+                                  "User",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                "Time to read book and enhance your knowledge",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .background,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        MyInputTextField(),
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Text(
+                              "Category",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: categoryData
+                                .map(
+                                  (e) => CategoryWidget(
+                                      ontap: () {
+                                        Get.to(
+                                          CategoryBook(
+                                              categoryName: e["lebel"]!),
+                                        );
+                                      },
+                                      iconPath: e["icon"]!,
+                                      btnName: e["lebel"]!),
+                                )
+                                .toList(),
+                          ),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 10),
