@@ -1,9 +1,11 @@
 import 'package:e_book/Components/BookCard.dart';
 import 'package:e_book/Components/BookTile.dart';
 import 'package:e_book/Components/MyDrawer.dart';
+import 'package:e_book/Controller/AuthController.dart';
 import 'package:e_book/Controller/BookController.dart';
 import 'package:e_book/Models/Data.dart';
 import 'package:e_book/Pages/BookDetails/BookDetails.dart';
+import 'package:e_book/Pages/CategoryBook/CategoryBook.dart';
 import 'package:e_book/Pages/Homepage/Widgets/AppBar.dart';
 import 'package:e_book/Pages/Homepage/Widgets/CategoryWidget.dart';
 import 'package:e_book/Pages/Homepage/Widgets/MyInputeTextField.dart';
@@ -17,6 +19,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BookController bookController = Get.put(BookController());
+    AuthController authController = Get.put(AuthController());
     bookController.getUserBook();
     return Scaffold(
       drawer: myDrawer,
@@ -27,95 +30,100 @@ class HomePage extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
               color: Theme.of(context).colorScheme.primary,
               // height: 500,
-              child: Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          SizedBox(height: 30),
-                          HomeAppBar(),
-                          SizedBox(height: 50),
-                          Row(
-                            children: [
-                              Text(
-                                "Good Morining✌️",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,
-                                    ),
-                              ),
-                              Text(
-                                "Nitish",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  "Time to read book and enhance your knowledge",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall
-                                      ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          MyInputTextField(),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Text(
-                                "Topics",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: categoryData
-                                  .map(
-                                    (e) => CategoryWidget(
-                                        iconPath: e["icon"]!,
-                                        btnName: e["lebel"]!),
-                                  )
-                                  .toList(),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 30),
+                        HomeAppBar(),
+                        SizedBox(height: 50),
+                        Row(
+                          children: [
+                            Text(
+                              "Hello ✌️",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                  ),
                             ),
-                          )
-                        ],
-                      ),
+                            Text(
+                              authController.auth.currentUser!.displayName! ??
+                                  "User",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                "Time to read book and enhance your knowledge",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .background,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        MyInputTextField(),
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Text(
+                              "Category",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: categoryData
+                                .map(
+                                  (e) => CategoryWidget(
+                                      ontap: () {
+                                        Get.to(
+                                          CategoryBook(
+                                              categoryName: e["lebel"]!),
+                                        );
+                                      },
+                                      iconPath: e["icon"]!,
+                                      btnName: e["lebel"]!),
+                                )
+                                .toList(),
+                          ),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 10),
@@ -124,10 +132,15 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Trending",
+                        "Trending Courses",
                         style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                      Text(
+                        "see all",
+                        style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ],
                   ),
@@ -172,7 +185,7 @@ class HomePage extends StatelessWidget {
                                 coverUrl: e.coverUrl!,
                                 author: e.author!,
                                 price: e.price!,
-                                rating: e.rating!,
+                                rating: e.rating ?? "0",
                                 totalRating: 12,
                               ),
                             )

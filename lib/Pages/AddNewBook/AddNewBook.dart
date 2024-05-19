@@ -15,6 +15,7 @@ class AddNewBookPage extends StatelessWidget {
     TextEditingController controller = TextEditingController();
     PdfController pdfController = Get.put(PdfController());
     BookController bookController = Get.put(BookController());
+    RxString categoryValue = "10".obs;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -166,6 +167,42 @@ class AddNewBookPage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 10),
+                Obx(
+                  () => Row(
+                    children: [
+                      DropdownButton(
+                        value: categoryValue.value,
+                        hint: Text("Select Category"),
+                        items: const [
+                          DropdownMenuItem(
+                            value: '10',
+                            child: Text("Xth Class"),
+                          ),
+                          DropdownMenuItem(
+                            value: '11',
+                            child: Text("XIth Class"),
+                          ),
+                          DropdownMenuItem(
+                            value: '12',
+                            child: Text("XIIth Class"),
+                          ),
+                          DropdownMenuItem(
+                            value: '13',
+                            child: Text("Under Graduction"),
+                          ),
+                          DropdownMenuItem(
+                            value: '14',
+                            child: Text("Post Graduction"),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          categoryValue.value = value!;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
                 MyTextFormField(
                   hintText: "Book title",
                   icon: Icons.book,
@@ -233,32 +270,37 @@ class AddNewBookPage extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.red,
-                            )),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.close,
-                              color: Colors.red,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              "CANCLE",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Colors.red,
-                                  ),
-                            ),
-                          ],
+                      child: InkWell(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.red,
+                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                "CANCLE",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      color: Colors.red,
+                                    ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -277,7 +319,8 @@ class AddNewBookPage extends StatelessWidget {
                               )
                             : InkWell(
                                 onTap: () {
-                                  bookController.createBook();
+                                  bookController
+                                      .createBook(categoryValue.value);
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
